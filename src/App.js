@@ -31,8 +31,37 @@ import './App.css';
 
 class App extends React.Component
 {
-    
-  
+  constructor(props) {
+    super(props);
+    this.state = { 
+        newItem :"",
+        list: []
+        }
+  }
+
+  deleteItem(id) {
+    const list=[...this.state.list];
+    const updatedlist=list.filter(item => item.id !==id);
+    this.setState({list: updatedlist})
+
+  }
+
+  updateInput(input)
+  {
+    this.setState({newItem:input})
+  }
+
+
+  addItem(todoValue) {
+    if(todoValue!=="")
+      {
+          const newItem={id: Date.now(), value:todoValue, isDone: false };
+          const list = [...this.state.list];
+          list.push(newItem);
+
+          this.setState({list, newItem:""});
+      }
+  }
   render() {
   return (
     <div className="App" >
@@ -48,15 +77,33 @@ class App extends React.Component
           </h2>
           
           
-        <input type="text" className="input-text" placeholder="Write a todo"/>
+        <input type="text" className="input-text" placeholder="Write a todo"
+
+              required value={this.state.newItem}
+              onChange={e => this.updateInput(e.target.value)}
+
+        />
        
         </div>
         <p>First time implementation</p>
 
         <div>
-          <button className="add-button" > Submit</button>
+          <button className="add-button"  onClick={()=>this.addItem(this.state.newItem)}
+            disabled={!this.state.newItem.length}
+          > Submit</button>
 
           <ul>
+            {this.state.list.map(item=>{return(   
+
+
+              <li key={item.id}>
+                  <input
+                  type="checkbox" name="Name"  checked={item.isDone}
+                  onChange={()=> {} } />
+                  <button className="btn" onClick={()=> this.deleteItem(item.id)}> Delete </button>
+              </li>
+            );
+            })}
             <li>
               <input type="checkbox" className=""/>
               Record Youtube video
